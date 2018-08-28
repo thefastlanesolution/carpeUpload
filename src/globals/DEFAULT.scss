@@ -1,0 +1,26 @@
+@import 'variables';
+
+.row{
+  display: flex;
+}
+
+.column{
+  display: flex;
+  flex-direction: column;
+}
+
+.center{
+  justify-content: center;
+  align-items: center;
+}
+
+.grid{
+  display: grid;
+}
+
+input, textarea {
+  outline: none;
+  border: none;
+  resize: none;
+}
+
