@@ -1,13 +1,13 @@
 <template>
   <div class="form-container">
 
-    <form id="photo-drop-zone" class='dropzone' action='#' >
+    <form id="photo-drop-zone" @click.stop class='dropzone' action='#' >
       <!-- Dropzone -->
       <h2 class='dz-message'>Drop files <span>here</span> or click to upload</h2>
       <div id='preview' class="dropzone-previews"></div>
 
       <!-- Form Inputs -->
-      <div class="column">
+      <div @click.prevent.stop class="column">
 
         <div class="row form-row">
           <input
@@ -24,7 +24,8 @@
             v-model='inputs.description'
             :class="{ focused : inputs.description }"
             name='description'
-            type="text"></textarea>
+            type="text">
+            </textarea>
           <label for='description'>Description</label>
           <div class="error">{{ errors.description }}</div>
         </div>
@@ -39,6 +40,7 @@
           <div class="error">{{ errors.price }}</div>
         </div>
 
+      <!-- Submit -->
         <div class="row form-row">
           <button id="submit">Submit</button>
         </div>
@@ -88,7 +90,9 @@
           self.processQueue();
         } );
 
-        this.on("sendingmultiple", () => {
+        this.on("sendingmultiple", ( event ) => {
+
+          console.log( event );
           // Gets triggered when the form is actually being sent.
           // Hide the success button or the complete form.
         } );
@@ -110,17 +114,25 @@
   export default {
     name:'InputForm',
     mounted(){
-      configureDropzone();
+      this.dropZone = configureDropzone();
     },
     props:{
-      inputs: Object,
-      errors: Object
+      inputs : Object,
+      errors : Object,
+      type   : String
+    },
+
+    computed : {
+      files(){
+        return this.dropZone.files;
+      }
     },
     data(){
       return{
-
+        dropZone : null,
       }
     },
+
   }
 </script>
 
@@ -156,12 +168,20 @@
 	}
 
   // input styling
+  form{
+    .column{
+      margin: 0 auto;
+      width: 350px;
+    }
+  }
+
   .form-row{
     position: relative;
     padding: 15px 0;
 
     input,textarea{
-      min-height: 20px;
+      width: 100%;
+      min-height: 30px;
 
       &:focus{
         ~label{
@@ -184,10 +204,17 @@
       pointer-events: none;
       transition: all .2s ease;
       position: absolute;
-      transform: translateY(0px) scale(1);
+      transform: translate(5px, 5px) scale(1)
+    }
+
+    button{
+      margin: 0 auto;
+      width: 125px;
+      height: 30px;
+      border-radius: 5px;
+      outline: none;
     }
 
   }
-
 
 </style>
